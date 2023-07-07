@@ -26,9 +26,7 @@
 
 ### 手动安装
 
-JAR源码下载：
-
-[foxpay-sdk]: https://github.com/dasen-software/foxpay-sdk.git
+JAR源码下载：[foxpay-sdk](https://github.com/dasen-software/foxpay-sdk.git )
 
 请根据版本号下载相应的 JAR 文件并导入至工程。
 
