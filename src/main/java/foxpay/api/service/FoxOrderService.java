@@ -1,10 +1,8 @@
 package foxpay.api.service;
 
-import foxpay.api.dto.OrderCreateDTO;
-import foxpay.api.dto.OrderQueryDTO;
+import foxpay.api.dto.*;
 import foxpay.api.result.FoxPayResult;
-import foxpay.api.vo.FoxBalanceVO;
-import foxpay.api.vo.FoxOrderVO;
+import foxpay.api.vo.*;
 
 public interface FoxOrderService {
 
@@ -12,22 +10,39 @@ public interface FoxOrderService {
     /**
      * 创建订单
      */
-    FoxOrderVO orderCreate(OrderCreateDTO dto);
+    OrderCreateVO orderCreate(OrderCreateDTO dto);
 
     /**
      * 查询订单
      */
-    FoxOrderVO orderQuery(OrderQueryDTO dto);
+    OrderQueryVO orderQuery(OrderQueryDTO dto);
 
     /**
      * 关闭订单
      */
-    FoxPayResult closeOrder(OrderQueryDTO dto);
+    FoxPayResult orderClose(OrderCloseDTO dto);
 
 
     /**
      * 查询资产
      */
-    FoxBalanceVO getBalance();
+    BalanceQueryVO balanceQuery();
 
+
+    /**
+     * 提现获取凭证
+     */
+    TransPrepareVO transPrepare(TransPrepareDTO dto);
+
+
+    /**
+     * 确认提现
+     */
+    TransVO trans(TransDTO dto);
+
+
+    /**
+     * 查询提现记录
+     */
+    TransQueryVO getTrans(TransQueryDTO dto);
 }

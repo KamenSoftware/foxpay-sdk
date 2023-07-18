@@ -13,7 +13,7 @@ import foxpay.api.config.properties.FoxPayConfigProperties;
 import foxpay.api.constants.FoxPayHeaderConstant;
 import foxpay.api.enums.CodeEnum;
 import foxpay.api.exception.FoxPayException;
-import foxpay.api.result.FoxPay;
+import foxpay.api.result.FoxPayResult;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class FoxPayRequestUtil {
      * @param url   请求地址
      * @param param JSON请求参数
      */
-    public static FoxPay orderRequest(String url, Object param, FoxPayConfigProperties config) {
+    public static FoxPayResult orderRequest(String url, Object param, FoxPayConfigProperties config) {
         if (StrUtil.isBlank(config.getAppId())) {
             throw new FoxPayException(CodeEnum.CONFIG_ERROR, "appId");
         }
@@ -57,10 +57,10 @@ public class FoxPayRequestUtil {
             publicKey = config.getPublicKey();
         }
 
-        if (StrUtil.isBlank(config.getPrivateKey())) {
+        if (StrUtil.isBlank(privateKey)) {
             throw new FoxPayException(CodeEnum.CONFIG_ERROR, "privateKey");
         }
-        if (StrUtil.isBlank(config.getPublicKey())) {
+        if (StrUtil.isBlank(publicKey)) {
             throw new FoxPayException(CodeEnum.CONFIG_ERROR, "publicKey");
         }
 
@@ -71,7 +71,7 @@ public class FoxPayRequestUtil {
     }
 
 
-    public static FoxPay orderRequest(String url, Object param, String appId, String publicKey, String privateKey) {
+    public static FoxPayResult orderRequest(String url, Object param, String appId, String publicKey, String privateKey) {
         //请求头参数
         Map<String, String> headerMap = new HashMap<String, String>();
         headerMap.put(FoxPayHeaderConstant.appId, appId);
@@ -120,7 +120,7 @@ public class FoxPayRequestUtil {
                 }
             }
         }
-        FoxPay foxPay = new FoxPay();
+        FoxPayResult foxPay = new FoxPayResult();
         foxPay.setMessage(msg);
         foxPay.setCode(code);
         foxPay.setData(data);

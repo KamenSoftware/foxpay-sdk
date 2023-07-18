@@ -5,14 +5,11 @@
 - 此sdk为方便java开发人员对接foxpay平台收银台功能
 
 - 已实现功能
-
   - 创建订单
-
   - 查询订单
-
   - 关闭订单
-
   - 查询资产
+  - 资产提现
 
     
 
@@ -66,7 +63,7 @@ fox:
     private-key:  私钥加密(默认方式)
     #private-key-file:  私钥文件地址
     public-key: 公钥验签(默认方式)
-    #public-key-file: 公钥验签(默认方式)
+    #public-key-file:  公钥文件地址
     url: 请求url
 
 ```
@@ -76,20 +73,84 @@ fox:
 ### 使用示例
 
 ```java
-    @Autowired
-    private FoxOrderService foxOrderService;
+import foxpay.api.dto.OrderCreateDTO;
+import foxpay.api.dto.OrderQueryDTO;
+import foxpay.api.dto.TransDTO;
+import foxpay.api.dto.TransPrepareDTO;
+import foxpay.api.service.FoxOrderService;
+import foxpay.api.vo.OrderCreateVO;
+import foxpay.api.vo.OrderQueryVO;
+import foxpay.api.vo.TransPrepareVO;
+import foxpay.api.vo.TransVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-    @GetMapping("/create")
-    public void create() {
-        OrderCreateDTO dto = new OrderCreateDTO();
-        dto.setAmount("1.1");
-        dto.setRemark("test");
-        dto.setSubject("test");
-        dto.setOrder_no("test");
-        FoxOrderVO result = foxOrderService.orderCreate(dto);
-        System.out.println(result.getMessage());
-        System.out.println(result.getCode());
-        System.out.println(result);
-    }
+
+@RestController
+@RequestMapping("/test")
+public class BasicController {
+
+  @Autowired
+  private FoxOrderService foxOrderService;
+
+  //创建订单
+  @GetMapping("/orderCreate")
+  public void orderCreate(@RequestParam String tradeNo) {
+    OrderCreateDTO dto = new OrderCreateDTO();
+    dto.setAmount("1.1");
+    dto.setRemark("test");
+    dto.setSubject("test");
+    dto.setOrder_no(tradeNo);
+    OrderCreateVO result = foxOrderService.orderCreate(dto);
+    System.out.println(result.getMessage());
+    System.out.println(result.getCode());
+    System.out.println(result);
+    System.out.println(result.getAmount());
+  }
+
+
+  //查询订单
+  @GetMapping("/orderQuery")
+  public void orderQuery(@RequestParam String tradeNo) {
+    OrderQueryDTO dto = new OrderQueryDTO();
+    dto.setOrder_no(tradeNo);
+    OrderQueryVO result = foxOrderService.orderQuery(dto);
+    System.out.println(result.getMessage());
+    System.out.println(result.getCode());
+    System.out.println(result);
+    System.out.println(result.getAmount());
+  }
+
+
+  //提现获取凭证
+  @GetMapping("/transPrepare")
+  public void transPrepare(@RequestParam String orderNo) {
+    TransPrepareDTO dto = new TransPrepareDTO();
+    dto.setAmount("12");
+    dto.setTo_address("地址");
+    dto.setRemark("test");
+    dto.setOrder_no(orderNo);
+    TransPrepareVO result = foxOrderService.transPrepare(dto);
+    System.out.println(result.getMessage());
+    System.out.println(result.getCode());
+    System.out.println(result);
+    System.out.println(result.getTrans_token());
+  }
+
+  //确认提现
+  @GetMapping("/trans")
+  public void trans(@RequestParam String transToken) {
+    TransDTO dto = new TransDTO();
+    dto.setTrans_token(transToken);
+    TransVO result = foxOrderService.trans(dto);
+    System.out.println(result.getMessage());
+    System.out.println(result.getCode());
+    System.out.println(result);
+  }
+}
+
 ```
 

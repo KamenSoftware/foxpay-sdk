@@ -11,4 +11,6 @@ public class FoxPayResult implements Serializable {
 
     private String message;
 
+    private String data;
+
 }

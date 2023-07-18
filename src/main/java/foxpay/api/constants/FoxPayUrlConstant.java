@@ -25,4 +25,20 @@ public interface FoxPayUrlConstant {
      * 查询商户资产
      */
     String GET_BALANCE = "/sdk/application/getBalance";
+
+    /**
+     * 提现获取凭证
+     */
+    String TRANS_PREPARE = "/sdk/application/transPrepare";
+
+    /**
+     * 确认提现
+     */
+    String TRANS = "/sdk/application/trans";
+
+
+    /**
+     * 查询提现订单
+     */
+    String GET_TRANS = "/sdk/application/getTrans";
 }
