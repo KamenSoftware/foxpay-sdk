@@ -16,7 +16,6 @@ public class OrderQueryVO extends FoxPayResult {
      */
     private Integer status;
 
-
     /**
      * eth收款地址
      */
@@ -61,6 +60,31 @@ public class OrderQueryVO extends FoxPayResult {
      * 数量
      */
     private String amount;
+
+    /**
+     * 手续费
+     */
+    private String fee;
+
+    /**
+     * 余额
+     */
+    private String balance;
+
+    /**
+     * 支付时间
+     */
+    private Long pay_time;
+
+    /**
+     * 支付地址
+     */
+    private String pay_address;
+
+    /**
+     * 交易hash
+     */
+    private String tx_hash;
 
     /**
      * 备注
