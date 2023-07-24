@@ -44,7 +44,7 @@ JAR源码下载：[foxpay-sdk](https://github.com/dasen-software/foxpay-sdk.git 
 
 ```xml
 <dependency>
-    <groupId>foxpay.api</groupId>
+    <groupId>ai.foxpay.api</groupId>
     <artifactId>foxpay-sdk</artifactId>
     <version>1.0</version>
 </dependency>
