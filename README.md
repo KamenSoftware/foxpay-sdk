@@ -9,7 +9,7 @@
   - 查询订单
   - 关闭订单
   - 查询资产
-  - 资产提现
+  - 资产提现(不支持foxpay系统内部地址为提现地址)
 
     
 
@@ -46,7 +46,7 @@ JAR源码下载：[foxpay-sdk](https://github.com/dasen-software/foxpay-sdk.git 
 <dependency>
     <groupId>ai.foxpay.api</groupId>
     <artifactId>foxpay-sdk</artifactId>
-    <version>1.0</version>
+    <version>最新版本号</version>
 </dependency>
 ```
 

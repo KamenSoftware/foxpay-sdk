@@ -1,10 +1,10 @@
 package foxpay.api.vo;
 
-import foxpay.api.result.FoxPayResult;
+import foxpay.api.result.FoxPayVO;
 import lombok.Data;
 
 @Data
-public class OrderCreateVO extends FoxPayResult {
+public class OrderCreateVO extends FoxPayVO {
 
     /**
      * 流水号

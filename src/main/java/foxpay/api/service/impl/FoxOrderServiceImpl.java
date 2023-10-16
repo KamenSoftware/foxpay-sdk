@@ -4,9 +4,9 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import foxpay.api.config.properties.FoxPayConfigProperties;
-import foxpay.api.constants.FoxPayUrlConstant;
 import foxpay.api.dto.*;
 import foxpay.api.enums.CodeEnum;
+import foxpay.api.enums.FoxPayUrlEnum;
 import foxpay.api.exception.FoxPayException;
 import foxpay.api.result.FoxPayResult;
 import foxpay.api.service.FoxOrderService;
@@ -46,11 +46,11 @@ public class FoxOrderServiceImpl implements FoxOrderService {
         if (amount.scale() > 2) {
             throw new FoxPayException(CodeEnum.PARAM_ERROR, "amount");
         }
-        if (amount.compareTo(BigDecimal.ONE) <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new FoxPayException(CodeEnum.PARAM_ERROR, "amount");
         }
 
-        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlConstant.ORDER_CREATE, dto, foxPayConfigProperties);
+        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlEnum.ORDER_CREATE, dto, foxPayConfigProperties);
 
         OrderCreateVO result = new OrderCreateVO();
         if (StrUtil.isNotBlank(foxPay.getData())) {
@@ -73,7 +73,7 @@ public class FoxOrderServiceImpl implements FoxOrderService {
         if (StrUtil.isBlank(dto.getOrder_no()) && StrUtil.isBlank(dto.getTrade_no())) {
             throw new FoxPayException(CodeEnum.PARAM_NOT_NULL);
         }
-        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlConstant.ORDER_QUERY, dto, foxPayConfigProperties);
+        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlEnum.ORDER_QUERY, dto, foxPayConfigProperties);
 
         OrderQueryVO result = new OrderQueryVO();
         if (StrUtil.isNotBlank(foxPay.getData())) {
@@ -97,7 +97,7 @@ public class FoxOrderServiceImpl implements FoxOrderService {
         if (StrUtil.isBlank(dto.getOrder_no()) && StrUtil.isBlank(dto.getTrade_no())) {
             throw new FoxPayException(CodeEnum.PARAM_NOT_NULL);
         }
-        return FoxPayRequestUtil.orderRequest(FoxPayUrlConstant.CLOSE_ORDER, dto, foxPayConfigProperties);
+        return FoxPayRequestUtil.orderRequest(FoxPayUrlEnum.CLOSE_ORDER, dto, foxPayConfigProperties);
     }
 
 
@@ -106,7 +106,7 @@ public class FoxOrderServiceImpl implements FoxOrderService {
      */
     @Override
     public BalanceQueryVO balanceQuery() {
-        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlConstant.GET_BALANCE, null, foxPayConfigProperties);
+        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlEnum.GET_BALANCE, null, foxPayConfigProperties);
         BalanceQueryVO result = new BalanceQueryVO();
         if (StrUtil.isNotBlank(foxPay.getData())) {
             result = JSON.parseObject(foxPay.getData(), BalanceQueryVO.class);
@@ -132,6 +132,9 @@ public class FoxOrderServiceImpl implements FoxOrderService {
         if (StrUtil.isBlank(dto.getTo_address())) {
             throw new FoxPayException(CodeEnum.PARAM_ERROR, "to_address");
         }
+        if (StrUtil.isBlank(dto.getGas_type())) {
+            throw new FoxPayException(CodeEnum.PARAM_ERROR, "gas_type");
+        }
         if (StrUtil.isBlank(dto.getAmount()) || !NumberUtil.isNumber(dto.getAmount())) {
             throw new FoxPayException(CodeEnum.PARAM_ERROR, "amount");
         }
@@ -139,10 +142,10 @@ public class FoxOrderServiceImpl implements FoxOrderService {
         if (amount.scale() > 2) {
             throw new FoxPayException(CodeEnum.PARAM_ERROR, "amount");
         }
-        if (amount.compareTo(BigDecimal.ONE) <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
             throw new FoxPayException(CodeEnum.PARAM_ERROR, "amount");
         }
-        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlConstant.TRANS_PREPARE, dto, foxPayConfigProperties);
+        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlEnum.TRANS_PREPARE, dto, foxPayConfigProperties);
         TransPrepareVO result = new TransPrepareVO();
         if (StrUtil.isNotBlank(foxPay.getData())) {
             result = JSON.parseObject(foxPay.getData(), TransPrepareVO.class);
@@ -163,7 +166,7 @@ public class FoxOrderServiceImpl implements FoxOrderService {
         if (StrUtil.isBlank(dto.getTrans_token())) {
             throw new FoxPayException(CodeEnum.PARAM_ERROR, "trans_token");
         }
-        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlConstant.TRANS, dto, foxPayConfigProperties);
+        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlEnum.TRANS, dto, foxPayConfigProperties);
         TransVO result = new TransVO();
         if (StrUtil.isNotBlank(foxPay.getData())) {
             result = JSON.parseObject(foxPay.getData(), TransVO.class);
@@ -184,7 +187,7 @@ public class FoxOrderServiceImpl implements FoxOrderService {
         if (StrUtil.isBlank(dto.getOrder_no()) && StrUtil.isBlank(dto.getTrade_no())) {
             throw new FoxPayException(CodeEnum.PARAM_NOT_NULL);
         }
-        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlConstant.GET_TRANS, dto, foxPayConfigProperties);
+        FoxPayResult foxPay = FoxPayRequestUtil.orderRequest(FoxPayUrlEnum.GET_TRANS, dto, foxPayConfigProperties);
 
         TransQueryVO result = new TransQueryVO();
         if (StrUtil.isNotBlank(foxPay.getData())) {

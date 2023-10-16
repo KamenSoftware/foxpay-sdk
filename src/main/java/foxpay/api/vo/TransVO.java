@@ -1,12 +1,10 @@
 package foxpay.api.vo;
 
-import foxpay.api.result.FoxPayResult;
+import foxpay.api.result.FoxPayVO;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
-public class TransVO extends FoxPayResult {
+public class TransVO extends FoxPayVO {
 
     /**
      * 流水号
@@ -17,6 +15,11 @@ public class TransVO extends FoxPayResult {
      * 商户订单号
      */
     private String order_no;
+
+    /**
+     * 手续费方式：2 交易金额 3 账户余额
+     */
+    private String gas_type;
 
     /**
      * 交易凭证

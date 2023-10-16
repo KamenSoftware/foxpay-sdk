@@ -31,4 +31,9 @@ public class TransPrepareDTO {
      * 备注
      */
     private String remark;
+
+    /**
+     * 手续费方式：2 交易金额 3 账户余额
+     */
+    private String gas_type;
 }

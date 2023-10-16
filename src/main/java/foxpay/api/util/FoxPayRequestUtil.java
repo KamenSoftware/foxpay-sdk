@@ -1,17 +1,22 @@
 package foxpay.api.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.file.FileReader;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import foxpay.api.config.properties.FoxPayConfigProperties;
 import foxpay.api.constants.FoxPayHeaderConstant;
 import foxpay.api.enums.CodeEnum;
+import foxpay.api.enums.FoxPayUrlEnum;
 import foxpay.api.exception.FoxPayException;
 import foxpay.api.result.FoxPayResult;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +27,8 @@ import java.util.Map;
 @Slf4j
 public class FoxPayRequestUtil {
 
-    /**
-     * 请求封装
-     *
-     * @param url   请求地址
-     * @param param JSON请求参数
-     */
-    public static FoxPayResult orderRequest(String url, Object param, FoxPayConfigProperties config) {
+
+    public static FoxPayResult orderRequest(FoxPayUrlEnum urlEnum, Object param, FoxPayConfigProperties config) {
         if (StrUtil.isBlank(config.getAppId())) {
             throw new FoxPayException(CodeEnum.CONFIG_ERROR, "appId");
         }
@@ -56,25 +56,20 @@ public class FoxPayRequestUtil {
             privateKey = config.getPrivateKey();
             publicKey = config.getPublicKey();
         }
-
         if (StrUtil.isBlank(privateKey)) {
             throw new FoxPayException(CodeEnum.CONFIG_ERROR, "privateKey");
         }
         if (StrUtil.isBlank(publicKey)) {
             throw new FoxPayException(CodeEnum.CONFIG_ERROR, "publicKey");
         }
-
-        url = config.getUrl() + url;
-        url = URLUtil.normalize(url); //格式化url
-
-        return orderRequest(url, param, config.getAppId(), publicKey, privateKey);
+        return orderRequest(urlEnum, param, publicKey, privateKey, config);
     }
 
 
-    public static FoxPayResult orderRequest(String url, Object param, String appId, String publicKey, String privateKey) {
+    public static FoxPayResult orderRequest(FoxPayUrlEnum urlEnum, Object param, String publicKey, String privateKey, FoxPayConfigProperties config) {
         //请求头参数
         Map<String, String> headerMap = new HashMap<String, String>();
-        headerMap.put(FoxPayHeaderConstant.appId, appId);
+        headerMap.put(FoxPayHeaderConstant.appId, config.getAppId());
 
         if (param != null) {
             //加密请求参数
@@ -88,13 +83,28 @@ public class FoxPayRequestUtil {
                 throw new FoxPayException(CodeEnum.REQUEST_SIGN_ERROR);
             }
         }
-        //构建请求参数
-        HttpResponse result = HttpRequest.post(url).headerMap(headerMap, true).body(JSON.toJSONString(param))//body内容
-                .timeout(20000)//超时(毫秒)
-                .execute();
+        String url = config.getUrl() + urlEnum.getUrl();
+        url = URLUtil.normalize(url); //格式化url
+        HttpResponse result = null;
+        if (urlEnum.getMethod() == Method.GET) {
+
+            //构建请求参数
+            result = HttpRequest.get(url).headerMap(headerMap, true)
+                    .form(BeanUtil.beanToMap(param, false, true))//body内容
+                    .timeout(3000)//超时(毫秒)
+                    .execute();
+        }
+        if (urlEnum.getMethod() == Method.POST) {
+            //构建请求参数
+            result = HttpRequest.post(url).headerMap(headerMap, true)
+                    .body(JSON.toJSONString(param))//body内容
+                    .timeout(3000)//超时(毫秒)
+                    .execute();
+        }
+        log.warn("request URL：{}", url);
 
         String body = result.body();
-        log.warn("body：{}", body);
+        log.warn("response body：{}", body);
 
         JSONObject object = JSON.parseObject(body);
         String msg = object.getString("message");

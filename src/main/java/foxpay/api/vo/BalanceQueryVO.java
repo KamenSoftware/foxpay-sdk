@@ -1,13 +1,13 @@
 package foxpay.api.vo;
 
-import foxpay.api.result.FoxPayResult;
+import foxpay.api.result.FoxPayVO;
 import lombok.Data;
 
 /**
  * sdk订单信息
  */
 @Data
-public class BalanceQueryVO extends FoxPayResult {
+public class BalanceQueryVO extends FoxPayVO {
 
 
     /**

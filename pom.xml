@@ -5,7 +5,7 @@
 
     <groupId>ai.foxpay.api</groupId>
     <artifactId>foxpay-sdk</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <name>${project.artifactId}</name>
     <description>foxpay sdk</description>
     <url>https://github.com/KamenSoftware/foxpay-sdk.git</url>
@@ -58,7 +58,6 @@
             <artifactId>hutool-http</artifactId>
             <version>5.5.8</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.alibaba</groupId>
